@@ -1,0 +1,38 @@
+{
+  "name": "grok-subagent",
+  "version": "0.7.1",
+  "description": "Codex orchestrates; Grok runs as a bounded context-offload worker with opaque artifacts and hardened ACP policies.",
+  "author": {
+    "name": "Eeaker",
+    "url": "https://github.com/Eeaker/grok-subagent"
+  },
+  "license": "MIT",
+  "keywords": [
+    "grok",
+    "subagent",
+    "mcp",
+    "acp",
+    "coding-agent",
+    "x-search",
+    "web-search"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Grok Subagent",
+    "shortDescription": "Codex 编排，Grok 作为本地子代理执行。",
+    "longDescription": "Codex 负责决策和核验；Grok 通过官方 ACP 承担只读调查、linked-worktree 实现和隔离实时研究。0.7 使用结构化 MCP、opaque artifact、长等待和分平台安全策略减少上下文回流。",
+    "developerName": "Walvez",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "让 Grok 作为只读子代理审查当前项目，你负责核验。",
+      "用 Grok 搜索最近关于这个主题的 X/Reddit 讨论。",
+      "在隔离 worktree 里让 Grok 实现这个改动，完成后你来审查。"
+    ]
+  },
+  "mcpServers": "./.mcp.json"
+}

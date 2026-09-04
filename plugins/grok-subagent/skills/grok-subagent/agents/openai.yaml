@@ -1,0 +1,11 @@
+interface:
+  display_name: "Grok Subagent"
+  short_description: "Delegate coding and Grok-native X/web research to Grok agents"
+  default_prompt: "Use $grok-subagent once per workstream. Codex picks effort, reuses grok_send, then verifies."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "grok-subagent"
+      description: "Local bridge to authenticated Grok Build ACP agents and isolated Grok search"
+policy:
+  allow_implicit_invocation: true

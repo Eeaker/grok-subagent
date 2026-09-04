@@ -1,0 +1,38 @@
+{
+  "mcpServers": {
+    "grok_subagent": {
+      "command": "node",
+      "args": ["./mcp-server/server.mjs"],
+      "cwd": ".",
+      "startup_timeout_sec": 30,
+      "tool_timeout_sec": 1860,
+      "enabled_tools": [
+        "grok_spawn_readonly",
+        "grok_spawn_worker",
+        "grok_wait",
+        "grok_artifact_read",
+        "grok_artifact_search",
+        "grok_send",
+        "grok_search",
+        "grok_handoff_interactive",
+        "grok_cancel",
+        "grok_close",
+        "grok_list"
+      ],
+      "default_tools_approval_mode": "approve",
+      "tools": {
+        "grok_spawn_readonly": { "approval_mode": "approve", "output_token_limit": 700 },
+        "grok_spawn_worker": { "approval_mode": "prompt", "output_token_limit": 700 },
+        "grok_wait": { "approval_mode": "approve", "output_token_limit": 1000 },
+        "grok_artifact_read": { "approval_mode": "approve", "output_token_limit": 1800 },
+        "grok_artifact_search": { "approval_mode": "approve", "output_token_limit": 1400 },
+        "grok_send": { "approval_mode": "prompt", "output_token_limit": 700 },
+        "grok_search": { "approval_mode": "approve", "output_token_limit": 1100 },
+        "grok_handoff_interactive": { "approval_mode": "prompt", "output_token_limit": 600 },
+        "grok_cancel": { "approval_mode": "approve", "output_token_limit": 400 },
+        "grok_close": { "approval_mode": "approve", "output_token_limit": 400 },
+        "grok_list": { "approval_mode": "approve", "output_token_limit": 1000 }
+      }
+    }
+  }
+}
