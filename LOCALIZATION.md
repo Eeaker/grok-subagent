@@ -1,6 +1,6 @@
 # Localization / platform notes
 
-Current version: `0.7.1`.
+Current version: `0.7.2`.
 
 The implementation is Windows-first. Native Windows has no xAI OS sandbox: readonly/safe-worker are policy-enforced; full worker (`allow_shell` / `worker_mode=full`) is allowed as **logical** isolation and is never advertised as kernel containment. WSL2/Linux remains the hard-isolation path.
 

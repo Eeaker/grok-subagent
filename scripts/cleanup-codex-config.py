@@ -12,7 +12,15 @@ import re
 from pathlib import Path
 
 SERVER = "grok_subagent"
-DIRECT_NAMESPACES = ["mcp__grok_subagent", "grok_subagent"]
+MARKETPLACE = "eeaker-grok"
+PLUGIN_ID = f"grok-subagent@{MARKETPLACE}"
+LEGACY_MARKETPLACE = "walvez-grok"
+DIRECT_NAMESPACES = [
+    "mcp__grok_subagent",
+    "grok_subagent",
+    "mcp__eeaker-grok__grok_subagent",
+    "mcp__walvez-grok__grok_subagent",
+]
 TOOLS = {
     "grok_spawn_readonly": ("approve", 700),
     "grok_spawn_worker": ("prompt", 700),
@@ -78,31 +86,49 @@ def table_bounds(text: str, header: str) -> tuple[int, int] | None:
 
 
 def merge_direct_namespaces(text: str) -> str:
+    """Keep Grok MCP namespaces listed, but do not turn code-mode on.
+
+    A bare `[features.code_mode]` table can enable under-development code-mode on
+    some Codex builds, which then hides long-running MCP tools from the model.
+    """
     header = "[features.code_mode]"
     bounds = table_bounds(text, header)
+    values = ", ".join(json.dumps(v) for v in DIRECT_NAMESPACES)
     if bounds is None:
         suffix = "\n" if text and not text.endswith("\n") else ""
-        values = ", ".join(json.dumps(v) for v in DIRECT_NAMESPACES)
-        return text + suffix + f"\n{header}\ndirect_only_tool_namespaces = [{values}]\n"
+        return text + suffix + f"\n{header}\nenabled = false\ndirect_only_tool_namespaces = [{values}]\n"
 
     start, end = bounds
     body = text[start:end]
-    # Handle a single- or multi-line array conservatively.
+    if re.search(r"(?m)^\s*enabled\s*=", body) is None:
+        body = "enabled = false\n" + body
     match = re.search(r"(?ms)^\s*direct_only_tool_namespaces\s*=\s*\[(.*?)\]([^\n]*)$", body)
     if match:
         existing = re.findall(r'"((?:\\.|[^"\\])*)"', match.group(1))
         decoded: list[str] = []
         for raw in existing:
-            try: decoded.append(json.loads('"' + raw + '"'))
-            except json.JSONDecodeError: pass
+            try:
+                decoded.append(json.loads('"' + raw + '"'))
+            except json.JSONDecodeError:
+                pass
         merged = list(dict.fromkeys(decoded + DIRECT_NAMESPACES))
         suffix = match.group(2) if len(match.groups()) > 1 else ""
         replacement = "direct_only_tool_namespaces = [" + ", ".join(json.dumps(v) for v in merged) + "]" + suffix
         body = body[:match.start()] + replacement + "\n" + body[match.end():]
     else:
-        values = ", ".join(json.dumps(v) for v in DIRECT_NAMESPACES)
         body = body + ("" if body.endswith("\n") else "\n") + f"direct_only_tool_namespaces = [{values}]\n"
     return text[:start] + body + text[end:]
+
+
+def migrate_plugin_identity(text: str) -> str:
+    """Keep Codex plugin/marketplace ids aligned with marketplace.json."""
+    text = text.replace(f"[marketplaces.{LEGACY_MARKETPLACE}]", f"[marketplaces.{MARKETPLACE}]")
+    text = text.replace(f'[plugins."grok-subagent@{LEGACY_MARKETPLACE}"]', f'[plugins."{PLUGIN_ID}"]')
+    text = text.replace(f"[plugins.'grok-subagent@{LEGACY_MARKETPLACE}']", f"[plugins.'{PLUGIN_ID}']")
+    if f'[plugins."{PLUGIN_ID}"]' not in text and f"[plugins.'{PLUGIN_ID}']" not in text:
+        suffix = "\n" if text and not text.endswith("\n") else ""
+        text = text + suffix + f'\n[plugins."{PLUGIN_ID}"]\nenabled = true\n'
+    return text
 
 
 def ensure_project_trust(text: str, project_root: Path) -> str:
@@ -160,6 +186,7 @@ def main() -> None:
         suffix = "\n" if text and not text.endswith("\n") else ""
         text = text + suffix + "\n" + mcp_fallback_block(project_root)
 
+    text = migrate_plugin_identity(text)
     text = merge_direct_namespaces(text)
     text = ensure_project_trust(text, project_root)
     path.write_text(text.rstrip() + "\n", encoding="utf-8")

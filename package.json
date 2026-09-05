@@ -1,6 +1,6 @@
 {
   "name": "grok-subagent-codex-marketplace",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "private": true,
   "description": "Codex ↔ Grok context-offload runtime with structured MCP artifacts, bounded waiting, and hardened ACP policies.",
   "scripts": {

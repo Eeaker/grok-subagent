@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.7.2 - 2026-09-04
+
+### Fixed
+
+- Codex could load the Grok **skill** while hiding the MCP tools (`grok_spawn_readonly`, `grok_wait`, …). Two local causes:
+  1. marketplace.json was renamed to `eeaker-grok` but `config.toml` still had `grok-subagent@walvez-grok`;
+  2. installer wrote a bare `[features.code_mode]` table, which can enable under-development code-mode and defer long MCP tools so the model never sees them.
+- Installer now migrates the plugin id to `grok-subagent@eeaker-grok` and sets `features.code_mode.enabled = false` while still recording direct-only namespaces for later.
+
 ## 0.7.1 - 2026-09-04
 
 ### Fixed

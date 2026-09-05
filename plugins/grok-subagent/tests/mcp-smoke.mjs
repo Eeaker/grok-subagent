@@ -8,7 +8,7 @@ const client = new McpTestClient(resolve(here, "../mcp-server/server.mjs"));
 try {
   const initialized = await client.request("initialize", { protocolVersion: "2025-11-25", capabilities: {}, clientInfo: { name: "smoke", version: "1" } });
   assert.equal(initialized.serverInfo.name, "grok-subagent");
-  assert.equal(initialized.serverInfo.version, "0.7.1");
+  assert.equal(initialized.serverInfo.version, "0.7.2");
   const listed = await client.request("tools/list");
   const names = listed.tools.map(t => t.name);
   assert.equal(names.length, 11);

@@ -49,7 +49,8 @@ Write-Host "==> Updating Codex config"
 if ($LASTEXITCODE -ne 0) { throw "cleanup-codex-config.py failed" }
 
 if ($hasDesktop) {
-  Write-Host "==> Reinstalling Codex Desktop plugin 0.7.1"
+  Write-Host "==> Reinstalling Codex Desktop plugin grok-subagent@eeaker-grok"
+  & $DesktopCodex plugin marketplace remove "walvez-grok" 2>$null
   & $DesktopCodex plugin marketplace add $Root
   if ($LASTEXITCODE -ne 0) { throw "codex plugin marketplace add failed" }
   & $DesktopCodex plugin remove "grok-subagent@walvez-grok" 2>$null

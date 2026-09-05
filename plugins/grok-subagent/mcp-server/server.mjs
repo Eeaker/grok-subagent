@@ -8,7 +8,7 @@ import { dirname, isAbsolute, join, resolve, sep } from "node:path";
 import { createInterface } from "node:readline";
 import { fileURLToPath } from "node:url";
 
-const VERSION = "0.7.1";
+const VERSION = "0.7.2";
 const MAX_RESULT_BYTES = 8 * 1024 * 1024;
 const MAX_AUTH_BYTES = 64 * 1024;
 const TOOL_TIMEOUT_SEC = 1860;

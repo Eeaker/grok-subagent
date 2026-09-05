@@ -51,4 +51,14 @@ Codex 做决策、拆任务、选择 effort、审查结果；Grok 承担大范�
 - Codex 与 Grok 意见一致不等于验证。最终打开 Grok 给出的证据位置并审查必要 diff/test。
 - 跑飞用 `grok_cancel`；不用了用 `grok_close`。
 
+## 若工具未出现在会话里
+
+如果只看到本 Skill、却没有 `grok_spawn_readonly` / `grok_wait` 等 MCP 工具，**不要假装已经调用了 Grok**。这表示插件的 MCP server 没有挂进当前会话。常见原因：
+
+- 用的是旧线程（插件/MCP 不会热更新）；
+- 插件 id 仍是 `grok-subagent@walvez-grok`，而 marketplace 已改为 `eeaker-grok`；
+- `[features.code_mode]` 被打开，长 MCP 工具被藏进 code-mode，模型看不到。
+
+处理：让用户新开 Codex 任务，并运行仓库里的 `.\install.ps1`。在工具列表出现之前，不要声称已经启动了 Grok 子代理。
+
 详见 `references/safety.md`。

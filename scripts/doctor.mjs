@@ -41,8 +41,14 @@ const codexHome = process.env.CODEX_HOME || join(homedir(), ".codex");
 const configPath = join(codexHome, "config.toml");
 if (existsSync(configPath)) {
   const text = readFileSync(configPath, "utf8");
+  const pluginOk = text.includes('grok-subagent@eeaker-grok');
+  const stalePlugin = text.includes('grok-subagent@walvez-grok');
+  add("codex.plugin_id", pluginOk && !stalePlugin ? "OK" : "WARN", pluginOk && !stalePlugin ? "plugin id is grok-subagent@eeaker-grok" : "run install.ps1: Codex still has grok-subagent@walvez-grok or missing eeaker-grok; Skill can load while MCP tools stay hidden");
+  const codeModeOn = /\[features\.code_mode\][\s\S]*?enabled\s*=\s*true/.test(text);
+  const codeModeBare = text.includes("[features.code_mode]") && !/\[features\.code_mode\][\s\S]*?enabled\s*=/.test(text);
+  add("codex.code_mode", !codeModeOn && !codeModeBare ? "OK" : "WARN", codeModeOn || codeModeBare ? "features.code_mode may hide long MCP tools from the model; install.ps1 sets enabled=false" : "code-mode not enabled");
   const direct = text.includes("mcp__grok_subagent") && text.includes("grok_subagent");
-  add("codex.direct_only", direct ? "OK" : "WARN", direct ? "Grok namespace is configured direct-only" : "run install script to merge direct_only_tool_namespaces");
+  add("codex.direct_only", direct ? "OK" : "WARN", direct ? "Grok namespace is listed for direct-only if code-mode is later enabled" : "run install script to merge direct_only_tool_namespaces");
 } else add("codex.config", "WARN", `${configPath} not found`);
 
 const authPath = join(process.env.GROK_HOME || join(homedir(), ".grok"), "auth.json");

@@ -1,6 +1,6 @@
 {
   "name": "grok-subagent",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "Codex orchestrates; Grok runs as a bounded context-offload worker with opaque artifacts and hardened ACP policies.",
   "author": {
     "name": "Eeaker",

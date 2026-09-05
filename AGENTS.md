@@ -1,6 +1,6 @@
 # Repository agent instructions
 
-This repository contains Codex ↔ Grok Bridge `0.7.1`.
+This repository contains Codex ↔ Grok Bridge `0.7.2`.
 
 When changing it:
 
